@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
 using Hackinder.Application;
+using Hackinder.DB;
 using Hackinder.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -30,6 +32,7 @@ namespace Hackinder
                 config.Filters.Add(typeof(ExceptionFilter));
             });
 
+            services.AddScoped(x => new DbConnector(Configuration["connectionString"]));
             services.AddTransient<IUserService, UserService>();
 
             // Register the Swagger generator, defining one or more Swagger documents
@@ -37,6 +40,7 @@ namespace Hackinder
             {
                 c.SwaggerDoc("v1", new Info { Title = "Hackinder", Version = "v1" });
             });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
