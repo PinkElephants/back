@@ -27,14 +27,14 @@ namespace Hackinder.Controllers
         }
 
         [HttpPut]
-        public async Task Update(UpdateUserDto request)
+        public async Task Update(string userId, [FromBody] UpdateUserDto request)
         {
-            await _userService.UpdateUser(request);
+            await _userService.UpdateUser(userId, request);
         }
 
         [HttpPost]
         [Route("{userId}/settings")]
-        public async Task UpdateSettings(int userId, [FromBody]Settings request)
+        public async Task UpdateSettings(string userId, [FromBody]Settings request)
         {
             await _userService.UpdateSettings(userId, request);
         }
