@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using MongoDB.Bson.Serialization.Attributes;
-using Newtonsoft.Json.Bson;
 
 namespace Hackinder.Entities
 {
@@ -23,5 +22,6 @@ namespace Hackinder.Entities
         public List<string> MatchedMe { get; set; } 
 
         public Settings Settings { get; set; }
+        
     }
 }

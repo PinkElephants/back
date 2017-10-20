@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Hackinder.Entities
 {
-    public class Tags
+    public class Skill
     {
         public string Name { get; set; }
         public int Count { get; set; }    

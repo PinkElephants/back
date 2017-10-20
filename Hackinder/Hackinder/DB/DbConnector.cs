@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Hackinder.Entities;
 using MongoDB.Driver;
 
 namespace Hackinder.DB
@@ -22,5 +23,7 @@ namespace Hackinder.DB
         {
             return _database;
         }
+
+        public IMongoCollection<Skill> Skills { get { return _database.GetCollection<Skill>("Skills"); } }
     }
 }
