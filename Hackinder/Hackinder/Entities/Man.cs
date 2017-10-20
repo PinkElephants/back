@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using MongoDB.Bson.Serialization.Attributes;
+using Newtonsoft.Json.Bson;
 
 namespace Hackinder.Entities
 {
     public class Man
     {
+        [BsonId]
         public string Id { get; set; }
 
         public string Idea { get; set; }
