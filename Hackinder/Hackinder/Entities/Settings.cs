@@ -9,6 +9,5 @@ namespace Hackinder.Entities
         public List<string> DesiredSpecializations { get; set; }
         public DateTime FromAge { get; set; }
         public DateTime ToAge { get; set; }
-
     }
 }

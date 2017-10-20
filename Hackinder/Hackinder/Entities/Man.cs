@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Hackinder.Entities
 {
@@ -7,6 +8,7 @@ namespace Hackinder.Entities
         public string Id { get; set; }
 
         public string Idea { get; set; }
+        public DateTime BirthDate { get; set; }
 
         public OAuthToken Token { get; set; }
 
@@ -16,7 +18,7 @@ namespace Hackinder.Entities
         public List<string> Matched { get; set; }
         public List<string> Dismatched { get; set; }
         public List<string> MatchedMe { get; set; } 
-        public Settings Settings { get; set; }
 
+        public Settings Settings { get; set; }
     }
 }
