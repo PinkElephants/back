@@ -24,6 +24,7 @@ namespace Hackinder.DB
             return _database;
         }
 
+        public IMongoCollection<Man> Mans { get { return _database.GetCollection<Man>("Mans"); } }
         public IMongoCollection<Skill> Skills { get { return _database.GetCollection<Skill>("Skills"); } }
     }
 }

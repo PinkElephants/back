@@ -21,9 +21,9 @@ namespace Hackinder.Controllers
         }
 
         [HttpPost]
-        public async Task Create(CreateUserDto request)
+        public void Create(CreateUserDto request)
         {
-            await _userService.CreateUser(request);
+            _userService.CreateUser(request);
         }
 
         [HttpPut]
