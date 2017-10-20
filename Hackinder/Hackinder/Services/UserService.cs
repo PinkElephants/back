@@ -30,14 +30,22 @@ namespace Hackinder.Services
             _connector.Mans.InsertOne(createdUser);
         }
 
-        public Task UpdateUser(UpdateUserDto request)
+        public async Task UpdateUser(string userId, UpdateUserDto request)
         {
-            throw new System.NotImplementedException();
+            await _connector.Mans.UpdateOneAsync(x => x.Id == userId,
+                Builders<Man>.Update
+                    .Set(x => x.Idea, request.Idea)
+                    .Set(x => x.Skills, request.Skills)
+                    .Set(x => x.Specializations, request.Specializations)
+            );
         }
 
-        public Task UpdateSettings(int userId, Settings request)
+        public async Task UpdateSettings(string userId, Settings request)
         {
-            throw new System.NotImplementedException();
+            await _connector.Mans.UpdateOneAsync(x => x.Id == userId,
+                Builders<Man>.Update
+                    .Set(x => x.Settings, request)
+            );
         }
     }
 }
