@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Hackinder.Application;
 using Hackinder.DB;
 using Hackinder.Entities;
@@ -42,12 +43,14 @@ namespace Hackinder.Controllers
             
             if (dto.isLike)
             {
-                _connector.Men.UpdateOne(x => x.AuthKey == HttpContext.GetViewerId(),
+                _connector.Men.UpdateOne(x => x.UserId == HttpContext.GetViewerId(),
                     Builders<Man>.Update.AddToSet(x => x.Matched, dto.user_id));
+                _connector.Men.UpdateOne(x => x.UserId == dto.user_id,
+                    Builders<Man>.Update.AddToSet(x => x.MatchedMe, HttpContext.GetViewerId()));
             }
             else
             {
-                _connector.Men.UpdateOne(x => x.AuthKey == HttpContext.GetViewerId(),
+                _connector.Men.UpdateOne(x => x.UserId == HttpContext.GetViewerId(),
                     Builders<Man>.Update.AddToSet(x => x.Dismatched, dto.user_id));
             }
         }
@@ -56,31 +59,14 @@ namespace Hackinder.Controllers
         [HttpGet]
         public List<MatchDto> GetMatches()
         {
-
-            var mock = new List<MatchDto>();
-            var ids = new[]
+            var man = _connector.Men.Find(x => x.UserId == HttpContext.GetViewerId()).First();
+            return _connector.Men.Find(x => man.Matched.Contains(x.UserId)).ToList().Select(x => new MatchDto
             {
-                16172513,
-                8644959,
-                20142331,
-                41835964,
-                10155845,
-                5134860,
-                103296
-            };
-            foreach (var id in ids)
-            {
-                mock.Add(
-                    new MatchDto
-                    {
-                        skills = new List<string> { ".Net", "JS", "aNgUlAr25", "вова пидор" },
-                        idea = " давайте называть вову пидором",
-                        summary = "рукожопый мудак",
-                        user_id = id.ToString()
-                    }
-                );
-            }
-            return mock;
+                skills = x.Skills,
+                idea = x.Idea,
+                user_id = x.UserId,
+                summary = x.Summary
+            }).ToList();
         }
 
     }

@@ -23,23 +23,24 @@ namespace Hackinder.Services
             //return MockMatch();
             int total = 10;
             var result = new List<NewMatchDto>();
-            var man = _connector.Men.Find(x => x.AuthKey == userId).First();
+            var man = _connector.Men.Find(x => x.UserId == userId).First();
             var dontMatch = man.Dismatched.ToArray().ToList();
-            dontMatch.Add(man.AuthKey);
+            dontMatch.Add(man.UserId);
+            dontMatch.AddRange(man.Matched);
 
             if (man.MatchedMe.Count > 0)
             {
                 var wantMe = man.MatchedMe.Where(x => !dontMatch.Contains(x)).Take(total / 3);
 
                 result.AddRange(_connector.Men
-                    .Find(x => wantMe.Contains(x.AuthKey))
+                    .Find(x => wantMe.Contains(x.UserId))
                     .ToList()
                     .Select(x => new NewMatchDto
                     {
                         skills = x.Skills,
                         idea = x.Idea,
                         isMatch = true,
-                        user_id = x.AuthKey,
+                        user_id = x.UserId,
                         summary = x.Summary
                     }));
                 total -= result.Count;
@@ -125,23 +126,23 @@ namespace Hackinder.Services
             var closeSkills = orderedSkills.ToArray();
             while ((int)Math.Log(closeSkills.Length, 2) != 0 && result.Count < count)
             {
-                var close = _connector.Men.Find(x => !dontMatch.Contains(x.AuthKey) && closeSkills.All(s => x.LowerSkills.Contains(s))).ToList();
+                var close = _connector.Men.Find(x => !dontMatch.Contains(x.UserId) && closeSkills.All(s => x.LowerSkills.Contains(s))).ToList();
                 result.AddRange(close);
-                dontMatch.AddRange(close.Select(x => x.AuthKey));
+                dontMatch.AddRange(close.Select(x => x.UserId));
                 closeSkills = closeSkills.Take(closeSkills.Length / 2).ToArray();
             }
             if (result.Count < count)
             {
                 var rnd = new Random();
                 var skill = orderedSkills[rnd.Next(0, orderedSkills.Count)];
-                var randomSkilled = _connector.Men.Find(x => !dontMatch.Contains(x.AuthKey) && x.LowerSkills.Contains(skill),
+                var randomSkilled = _connector.Men.Find(x => !dontMatch.Contains(x.UserId) && x.LowerSkills.Contains(skill),
                     new FindOptions { BatchSize = count - result.Count }).ToList();
-                dontMatch.AddRange(randomSkilled.Select(x => x.AuthKey));
+                dontMatch.AddRange(randomSkilled.Select(x => x.UserId));
                 result.AddRange(randomSkilled);
             }
             if (result.Count < count)
             {
-                var any = _connector.Men.Find(x => !dontMatch.Contains(x.AuthKey), new FindOptions { BatchSize = count - result.Count }).ToList();
+                var any = _connector.Men.Find(x => !dontMatch.Contains(x.UserId), new FindOptions { BatchSize = count - result.Count }).ToList();
                 result.AddRange(any);
             }
 
@@ -150,7 +151,7 @@ namespace Hackinder.Services
                 idea = x.Idea,
                 skills = x.Skills,
                 summary = x.Summary,
-                user_id = x.AuthKey,
+                user_id = x.UserId,
                 isMatch = false
             }).ToList();
 

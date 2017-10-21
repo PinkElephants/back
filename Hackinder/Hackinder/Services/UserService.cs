@@ -20,23 +20,23 @@ namespace Hackinder.Services
 
         public Man GetUser(string userId)
         {
-            return _connector.Men.Find(x => x.AuthKey == userId).FirstOrDefault();
+            return _connector.Men.Find(x => x.UserId == userId).FirstOrDefault();
         }
 
         public async Task CreateUser(string userId, CreateUserDto request)
         {
-            var user = _connector.Men.Find(x => x.AuthKey == userId).FirstOrDefault();
+            var user = _connector.Men.Find(x => x.UserId == userId).FirstOrDefault();
             if (user == null)
             {
                 var createdUser = new Man
                 {
-                    AuthKey = userId
+                    UserId = userId
                 };
                 await _connector.Men.InsertOneAsync(createdUser); ;
             }
 
             _skillService.UpdateSkillz(request.Skills.ToArray());
-            await _connector.Men.UpdateOneAsync(x => x.AuthKey == userId,
+            await _connector.Men.UpdateOneAsync(x => x.UserId == userId,
                 Builders<Man>.Update
                     .Set(x => x.Idea, request.Idea)
                     .Set(x => x.Skills, request.Skills)
@@ -48,7 +48,7 @@ namespace Hackinder.Services
 
         public async Task UpdateSettings(string userId, Settings request)
         {
-            await _connector.Men.UpdateOneAsync(x => x.AuthKey == userId,
+            await _connector.Men.UpdateOneAsync(x => x.UserId == userId,
                 Builders<Man>.Update
                     .Set(x => x.Settings, request)
             );
