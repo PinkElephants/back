@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
 using Hackinder.Application;
 using Hackinder.DB;
+using Hackinder.Entities;
 using Hackinder.Entities.Dto;
 using Hackinder.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Driver;
 
 namespace Hackinder.Controllers
 {
@@ -35,8 +37,18 @@ namespace Hackinder.Controllers
         [HttpGet]
         public void Post(CreateMatchDto dto)
         {
-            //var man = await _userManager.GetUserAsync(HttpContext.User);
-            //_connector.
+           
+            
+            if (dto.Success)
+            {
+                _connector.Men.UpdateOne(x => x.Id == HttpContext.GetViewerId(),
+                    Builders<Man>.Update.AddToSet(x => x.Matched, dto.ManId));
+            }
+            else
+            {
+                _connector.Men.UpdateOne(x => x.Id == HttpContext.GetViewerId(),
+                    Builders<Man>.Update.AddToSet(x => x.Dismatched, dto.ManId));
+            }
         }
 
 
