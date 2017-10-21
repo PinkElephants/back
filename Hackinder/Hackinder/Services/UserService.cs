@@ -41,8 +41,7 @@ namespace Hackinder.Services
 
             var createdUser = new Man
             {
-                Id = userId,
-                BirthDate = request.BirthDate
+                Id = userId
             };
             await _connector.Men.InsertOneAsync(createdUser);
         }

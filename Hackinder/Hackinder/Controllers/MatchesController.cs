@@ -53,7 +53,7 @@ namespace Hackinder.Controllers
 
         [Route("matches")]
         [HttpGet]
-        public List<MatchDto> Get()
+        public List<MatchDto> GetMatches()
         {
 
             var mock = new List<MatchDto>();
