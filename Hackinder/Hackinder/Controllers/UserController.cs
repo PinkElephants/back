@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Security.Authentication;
+using System.Threading.Tasks;
 using Hackinder.Application;
 using Hackinder.Entities;
 using Hackinder.Entities.Dto;
@@ -23,7 +24,10 @@ namespace Hackinder.Controllers
         [HttpGet]
         public Man Get()
         {
-            return _userService.GetUser(HttpContext.GetViewerId());
+            var user = _userService.GetUser(HttpContext.GetViewerId());
+            if (user == null)
+                throw new AuthenticationException();
+            return user;
         }
 
         [HttpPost]
