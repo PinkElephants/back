@@ -26,23 +26,31 @@ namespace Hackinder.Controllers
         [HttpGet]
         public List<NewMatchDto> Get(CreateNewmatchesDto dto)
         {
-            return MockMatch();
+            //return MockMatch();
             int total = 10;
             var result = new List<NewMatchDto>();
             var man = _connector.Men.Find(x => x.Id == HttpContext.GetViewerId()).First();
-            if (man.MatchedMe.Count >0)
+            if (man.MatchedMe.Count > 0)
             {
-                var wantMe = man.MatchedMe.Where(x => !man.Dismatched.Contains(x)).Take(total/ 2);
+                var wantMe = man.MatchedMe.Where(x => !man.Dismatched.Contains(x)).Take(total/ 3);
                 
-                result.AddRange(_connector.Men.Find(x => wantMe.Contains(x.Id)).ToList().Select(x => new NewMatchDto()
-                {
-                    
-                }));
+                result.AddRange(_connector.Men
+                                          .Find(x => wantMe.Contains(x.Id))
+                                          .ToList()
+                                          .Select(x => new NewMatchDto
+                    {
+                        skills = x.Skills,
+                        idea = x.Idea,
+                        isMatch = true,
+                        user_id = x.Id,
+                        summary = x.Summary
+                    }));
                 total -= result.Count;
             }
+            result.AddRange(new FindClosest(_connector).FindMatch(man.LowerSkills, total, result .Select(x => x.user_id).ToList()));
             //_connector.Men
 
-            return null;
+            return result;
         }
 
         [Route("match")]
@@ -62,7 +70,7 @@ namespace Hackinder.Controllers
         }
 
 
-        public List<NewMatchDto> MockMatch()
+        private List<NewMatchDto> MockMatch()
         {
             var rnd = new Random();
             var mock = new List<NewMatchDto>();
@@ -95,35 +103,60 @@ namespace Hackinder.Controllers
 
     }
 
-    //public class FindClosest
-    //{
-    //    private DbConnector _connector;
+    public class FindClosest
+    {
+        private DbConnector _connector;
 
-    //    public FindClosest(DbConnector connector)
-    //    {
-    //        _connector = connector;
-    //    }
+        public FindClosest(DbConnector connector)
+        {
+            _connector = connector;
+        }
 
-    //    public List<Man> Find(List<string> skills,int count)
-    //    {
-    //        skills = skills.Select(x => x.ToLower()).Distinct().ToList();
-    //        skills = _connector.Skills
-    //                           .Find(x => skills.Contains(x.Name))
-    //                           .ToList()
-    //                           .Where(x => x.Count > 1)
-    //                           .OrderByDescending(x => x.Count)
-    //                           .Select(x => x.Name)
-    //                           .ToList();
+        public List<NewMatchDto> FindMatch(List<string> skills, int count, List<string> matched)
+        {
+            skills = skills.Select(x => x.ToLower()).Distinct().ToList();
+            var orderedSkills =  skills = _connector.Skills
+                               .Find(x => skills.Contains(x.Name))
+                               .ToList()
+                               .Where(x => x.Count > 1)
+                               .OrderByDescending(x => x.Count)
+                               .Select(x => x.Name)
+                               .ToList();
 
-    //        var result = new List<Man>();
+            var result = new List<Man>();
 
-    //        while ((int)Math.Log(skills.Count, 2) != 0 && result.Count < count)
-    //        {
-    //            _connector.Men.Find(x => skillInfo. x.LowerSkills.Contains())
-    //        }
+            while ((int)Math.Log(skills.Count, 2) != 0 && result.Count < count)
+            {
+                var close = _connector.Men.Find(x => !matched.Contains(x.Id) && skills.All(s => x.LowerSkills.Contains(s))).ToList();
+                result.AddRange(close);
+                matched.AddRange(close.Select(x => x.Id));
+            }
+            if (result.Count < count)
+            {
+                var rnd = new Random();
+                var skill = orderedSkills[rnd.Next(0, orderedSkills.Count)];
+                var randomSkilled =  _connector.Men.Find(x => !matched.Contains(x.Id) &&  x.LowerSkills.Contains(skill),
+                    new FindOptions {BatchSize = count - result.Count}).ToList();
+                matched.AddRange(randomSkilled.Select(x => x.Id));
+                result.AddRange(randomSkilled);
+            }
+            if (result.Count < count)
+            {
+                var any = _connector.Men.Find(x => !matched.Contains(x.Id) , new FindOptions { BatchSize = count - result.Count }).ToList();
+                result.AddRange(any);
+            }
 
-    //    }
-    //}
+            return result.Select(x => new NewMatchDto()
+            {
+                idea = x.Idea,
+                skills = x.Skills,
+                summary = x.Summary,
+                user_id = x.Id,
+                isMatch = false
+            }).ToList();
+
+        }
+    }
 
     public class CreateNewmatchesDto
     {

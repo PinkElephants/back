@@ -9,6 +9,6 @@ namespace Hackinder.Entities.Dto
 
         public string Idea { get; set; }
         public List<string> Skills { get; set; }
-        public List<string> Specializations { get; set; }
+        public string Summary { get; set; }
     }
 }

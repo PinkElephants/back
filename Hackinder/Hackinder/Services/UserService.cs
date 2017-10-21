@@ -29,7 +29,7 @@ namespace Hackinder.Services
                     Builders<Man>.Update
                         .Set(x => x.Idea, request.Idea)
                         .Set(x => x.Skills, request.Skills)
-                        .Set(x => x.Specializations, request.Specializations)
+                        .Set(x => x.Summary, request.Summary)
                 );
                 return;
             }
