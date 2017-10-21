@@ -51,16 +51,36 @@ namespace Hackinder.Controllers
             }
         }
 
+        [Route("matches")]
+        [HttpGet]
+        public List<MatchDto> Get()
+        {
 
-        //[Route("matches")]
-        //[HttpGet]
-        //public List<MatchDto> Get()
-        //{
-        //    return null;
-        //}
-
-
-
+            var mock = new List<MatchDto>();
+            var ids = new[]
+            {
+                16172513,
+                8644959,
+                20142331,
+                41835964,
+                10155845,
+                5134860,
+                103296
+            };
+            foreach (var id in ids)
+            {
+                mock.Add(
+                    new MatchDto
+                    {
+                        skills = new List<string> { ".Net", "JS", "aNgUlAr25", "вова пидор" },
+                        idea = " давайте называть вову пидором",
+                        summary = "рукожопый мудак",
+                        user_id = id.ToString()
+                    }
+                );
+            }
+            return mock;
+        }
 
     }
 }
