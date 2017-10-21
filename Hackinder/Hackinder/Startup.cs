@@ -47,6 +47,7 @@ namespace Hackinder
 
             services.AddSingleton(x => new DbConnector(Configuration["connectionString"]));
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<SkillService>();
 
             // Register the Swagger generator, defining one or more Swagger documents
             services.AddSwaggerGen(c =>
