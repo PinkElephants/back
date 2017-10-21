@@ -18,7 +18,7 @@ namespace Hackinder.Services
 
         public void CreateUser(CreateUserDto request)
         {
-            var user = _connector.Mans.Find(x => x.Id == request.Id).FirstOrDefault();
+            var user = _connector.Men.Find(x => x.Id == request.Id).FirstOrDefault();
             if (user != null)
                 throw new ArgumentException("User exists");
 
@@ -27,12 +27,12 @@ namespace Hackinder.Services
                 Id = request.Id,
                 BirthDate = request.BirthDate
             };
-            _connector.Mans.InsertOne(createdUser);
+            _connector.Men.InsertOne(createdUser);
         }
 
         public async Task UpdateUser(string userId, UpdateUserDto request)
         {
-            await _connector.Mans.UpdateOneAsync(x => x.Id == userId,
+            await _connector.Men.UpdateOneAsync(x => x.Id == userId,
                 Builders<Man>.Update
                     .Set(x => x.Idea, request.Idea)
                     .Set(x => x.Skills, request.Skills)
@@ -42,7 +42,7 @@ namespace Hackinder.Services
 
         public async Task UpdateSettings(string userId, Settings request)
         {
-            await _connector.Mans.UpdateOneAsync(x => x.Id == userId,
+            await _connector.Men.UpdateOneAsync(x => x.Id == userId,
                 Builders<Man>.Update
                     .Set(x => x.Settings, request)
             );

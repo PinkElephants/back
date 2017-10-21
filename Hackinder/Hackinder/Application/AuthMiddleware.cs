@@ -4,7 +4,6 @@ using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Hackinder.DB;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
@@ -64,7 +63,7 @@ namespace Hackinder.Application
                 return AuthenticateResult.Fail("Missing or malformed 'ViewerId' header");
             }
 
-            var user = await _connector.Mans.FindAsync(x => x.Id == viewerId);
+            var user = await _connector.Men.FindAsync(x => x.Id == viewerId);
             if (user == null)
             {
                 return AuthenticateResult.Fail("User doesn't exist");
@@ -100,14 +99,6 @@ namespace Hackinder.Application
                 }
                 return sb.ToString();
             }
-        }
-    }
-
-    public static class ContextExtension
-    {
-        public static string GetViewerId(this HttpContext context)
-        {
-            return context.Request.Headers[VkAuthCodeAuthenticationOptions.ViewerIdHeaderName];
         }
     }
 }
