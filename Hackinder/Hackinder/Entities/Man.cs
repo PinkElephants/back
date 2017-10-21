@@ -10,6 +10,8 @@ namespace Hackinder.Entities
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
 
+        public string AuthKey { get; set; }
+
         public string Idea { get; set; }
         public List<string> Skills { get; set; }
         public List<string> LowerSkills { get; set; }

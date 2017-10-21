@@ -63,7 +63,7 @@ namespace Hackinder.Application
                 return AuthenticateResult.Fail("Missing or malformed 'ViewerId' header");
             }
 
-            var user = await _connector.Men.FindAsync(x => x.Id == viewerId);
+            var user = await _connector.Men.FindAsync(x => x.AuthKey == viewerId);
             if (user == null)
             {
                 return AuthenticateResult.Fail("User doesn't exist");

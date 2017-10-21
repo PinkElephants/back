@@ -20,36 +20,35 @@ namespace Hackinder.Services
 
         public Man GetUser(string userId)
         {
-            return _connector.Men.Find(x => x.Id == userId).FirstOrDefault();
+            return _connector.Men.Find(x => x.AuthKey == userId).FirstOrDefault();
         }
 
         public async Task CreateUser(string userId, CreateUserDto request)
         {
-            var user = _connector.Men.Find(x => x.Id == userId).FirstOrDefault();
-            if (user != null)
+            var user = _connector.Men.Find(x => x.AuthKey == userId).FirstOrDefault();
+            if (user == null)
             {
-                _skillService.UpdateSkillz(request.Skills.ToArray());
-                await _connector.Men.UpdateOneAsync(x => x.Id == userId,
-                    Builders<Man>.Update
-                        .Set(x => x.Idea, request.Idea)
-                        .Set(x => x.Skills, request.Skills)
-                        .Set(x => x.LowerSkills, request.Skills.Select(x => x.ToLower().Trim()))
-                        .Set(x => x.Summary, request.Summary)
-                );
-                return;
+                var createdUser = new Man
+                {
+                    AuthKey = userId
+                };
+                await _connector.Men.InsertOneAsync(createdUser); ;
             }
 
-            var createdUser = new Man
-            {
-                Id = userId
-            };
-            await _connector.Men.InsertOneAsync(createdUser);
+            _skillService.UpdateSkillz(request.Skills.ToArray());
+            await _connector.Men.UpdateOneAsync(x => x.AuthKey == userId,
+                Builders<Man>.Update
+                    .Set(x => x.Idea, request.Idea)
+                    .Set(x => x.Skills, request.Skills)
+                    .Set(x => x.LowerSkills, request.Skills.Select(x => x.ToLower().Trim()))
+                    .Set(x => x.Summary, request.Summary)
+            );
         }
 
 
         public async Task UpdateSettings(string userId, Settings request)
         {
-            await _connector.Men.UpdateOneAsync(x => x.Id == userId,
+            await _connector.Men.UpdateOneAsync(x => x.AuthKey == userId,
                 Builders<Man>.Update
                     .Set(x => x.Settings, request)
             );

@@ -41,12 +41,12 @@ namespace Hackinder.Controllers
             
             if (dto.isLike)
             {
-                _connector.Men.UpdateOne(x => x.Id == HttpContext.GetViewerId(),
+                _connector.Men.UpdateOne(x => x.AuthKey == HttpContext.GetViewerId(),
                     Builders<Man>.Update.AddToSet(x => x.Matched, dto.user_id));
             }
             else
             {
-                _connector.Men.UpdateOne(x => x.Id == HttpContext.GetViewerId(),
+                _connector.Men.UpdateOne(x => x.AuthKey == HttpContext.GetViewerId(),
                     Builders<Man>.Update.AddToSet(x => x.Dismatched, dto.user_id));
             }
         }
