@@ -12,7 +12,7 @@ namespace Hackinder.Controllers
     [Route("api")]
     public class SkillController : Controller
     {
-        private DbConnector _connector;
+        private readonly DbConnector _connector;
 
         public SkillController(DbConnector connector)
         {
@@ -20,12 +20,14 @@ namespace Hackinder.Controllers
         }
 
         [Route("skills")]
+        [HttpGet]
         public  List<Skill> Get()
         {
             return  _connector.Skills.Find(x => true).ToList();
         }
 
         [Route("skill")]
+        [HttpPost]
         public void Post(AddSkillDto skill)
         {
             if (_connector.Skills.Find(x => x.Name == skill.Name).FirstOrDefault() == null)
