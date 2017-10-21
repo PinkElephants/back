@@ -39,8 +39,6 @@ namespace Hackinder.Controllers
         [HttpPost]
         public void Post([FromBody]CreateMatchDto dto)
         {
-           
-            
             if (dto.isLike)
             {
                 _connector.Men.UpdateOne(x => x.UserId == HttpContext.GetViewerId(),
@@ -60,7 +58,10 @@ namespace Hackinder.Controllers
         public List<MatchDto> GetMatches()
         {
             var man = _connector.Men.Find(x => x.UserId == HttpContext.GetViewerId()).First();
-            return _connector.Men.Find(x => man.Matched.Contains(x.UserId)).ToList().Select(x => new MatchDto
+
+            return _connector.Men.Find(x => man.Matched.Contains(x.UserId) && x.Matched.Contains(man.UserId))
+                                 .ToList()
+                                 .Select(x => new MatchDto
             {
                 skills = x.Skills,
                 idea = x.Idea,
