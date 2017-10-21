@@ -14,6 +14,7 @@ namespace Hackinder.Entities
         public DateTime BirthDate { get; set; }
 
         public List<string> Skills { get; set; }
+        public List<string> LowerSkills { get; set; }
         public List<string> Specializations { get; set; }
 
         public List<string> Matched { get; set; } = new List<string>();
