@@ -18,7 +18,7 @@ namespace Hackinder
 #if !DEBUG
                 .UseKestrel(options =>
                 {   
-                    options.Listen(IPAddress.Parse("77.244.217.178", 80);
+                    options.Listen(IPAddress.Parse("77.244.217.178"),80);
                     options.Listen(IPAddress.Parse("77.244.217.178"), 443, listenOptions =>
                     {
                         listenOptions.UseHttps("hackinder.pfx", "ololo");

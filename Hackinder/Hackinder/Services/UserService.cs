@@ -45,7 +45,7 @@ namespace Hackinder.Services
 
         public async Task UpdateSettings(string userId, Settings request)
         {
-            await _connector.Mans.UpdateOneAsync(x => x.Id == userId,
+            await _connector.Men.UpdateOneAsync(x => x.Id == userId,
                 Builders<Man>.Update
                     .Set(x => x.Settings, request)
             );
