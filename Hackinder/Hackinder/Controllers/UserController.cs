@@ -20,17 +20,18 @@ namespace Hackinder.Controllers
             _userService = userService;
         }
 
-        [HttpPost]
-        public void Create(CreateUserDto request)
+        [HttpGet]
+        public Man Get()
         {
-            _userService.CreateUser(request);
+            return _userService.GetUser(HttpContext.GetViewerId());
         }
 
-        [HttpPut]
-        public async Task Update(string userId, [FromBody] UpdateUserDto request)
+        [HttpPost]
+        public async Task Create(CreateUserDto request)
         {
-            await _userService.UpdateUser(userId, request);
+            await _userService.CreateUser(HttpContext.GetViewerId(), request);
         }
+
 
         [HttpPost]
         [Route("{userId}/settings")]

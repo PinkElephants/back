@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Hackinder.DB;
 using Hackinder.Entities;
 using Hackinder.Entities.Dto;
@@ -16,29 +15,33 @@ namespace Hackinder.Services
             _connector = connector;
         }
 
-        public void CreateUser(CreateUserDto request)
+        public Man GetUser(string userId)
         {
-            var user = _connector.Mans.Find(x => x.Id == request.Id).FirstOrDefault();
+            return _connector.Mans.Find(x => x.Id == userId).FirstOrDefault();
+        }
+
+        public async Task CreateUser(string userId, CreateUserDto request)
+        {
+            var user = _connector.Mans.Find(x => x.Id == userId).FirstOrDefault();
             if (user != null)
-                throw new ArgumentException("User exists");
+            {
+                await _connector.Mans.UpdateOneAsync(x => x.Id == userId,
+                    Builders<Man>.Update
+                        .Set(x => x.Idea, request.Idea)
+                        .Set(x => x.Skills, request.Skills)
+                        .Set(x => x.Specializations, request.Specializations)
+                );
+                return;
+            }
 
             var createdUser = new Man
             {
-                Id = request.Id,
+                Id = userId,
                 BirthDate = request.BirthDate
             };
-            _connector.Mans.InsertOne(createdUser);
+            await _connector.Mans.InsertOneAsync(createdUser);
         }
 
-        public async Task UpdateUser(string userId, UpdateUserDto request)
-        {
-            await _connector.Mans.UpdateOneAsync(x => x.Id == userId,
-                Builders<Man>.Update
-                    .Set(x => x.Idea, request.Idea)
-                    .Set(x => x.Skills, request.Skills)
-                    .Set(x => x.Specializations, request.Specializations)
-            );
-        }
 
         public async Task UpdateSettings(string userId, Settings request)
         {
