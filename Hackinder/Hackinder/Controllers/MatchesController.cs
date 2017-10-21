@@ -37,7 +37,7 @@ namespace Hackinder.Controllers
 
         [Route("match")]
         [HttpPost]
-        public void Post(CreateMatchDto dto)
+        public void Post([FromBody]CreateMatchDto dto)
         {
            
             
