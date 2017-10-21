@@ -6,8 +6,8 @@ namespace Hackinder.Services
 {
     public interface IUserService
     {
-        Task CreateUser(CreateUserDto request);
-        Task UpdateUser(UpdateUserDto request);
-        Task UpdateSettings(int userId, Settings request);
+        void CreateUser(CreateUserDto request);
+        Task UpdateUser(string userId, UpdateUserDto request);
+        Task UpdateSettings(string userId, Settings request);
     }
 }

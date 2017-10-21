@@ -2,9 +2,11 @@
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using Hackinder.DB;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using MongoDB.Driver;
 
 namespace Hackinder.Application
 {
@@ -34,39 +36,50 @@ namespace Hackinder.Application
     public class VkAuthCodeAuthenticationHandler : AuthenticationHandler<VkAuthCodeAuthenticationOptions>
     {
         private readonly VkAuthCodeAuthenticationOptions _options;
+        private readonly DbConnector _connector;
 
         public VkAuthCodeAuthenticationHandler(
             IOptionsMonitor<VkAuthCodeAuthenticationOptions> options,
             ILoggerFactory logger,
             UrlEncoder encoder,
-            ISystemClock clock) : base(options, logger, encoder, clock)
+            ISystemClock clock, 
+            DbConnector connector) : base(options, logger, encoder, clock)
         {
+            _connector = connector;
             _options = options.CurrentValue;
         }
 
-        protected override Task<AuthenticateResult> HandleAuthenticateAsync()
+        protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
-            if (!Context.Request.Headers.TryGetValue(_options.AuthCodeHeaderName, out var authCode))
+           
+            if (!Context.Request.Cookies.TryGetValue(_options.AuthCodeHeaderName, out var authCode))
             {
-                return Task.FromResult(AuthenticateResult.Fail("Missing or malformed 'AuthCode' header"));
+                return AuthenticateResult.Fail("Missing or malformed 'AuthCode' header");
             }
 
-            if (!Context.Request.Headers.TryGetValue(_options.ViewerIdHeaderName, out var viewerId))
+            if (!Context.Request.Cookies.TryGetValue(_options.ViewerIdHeaderName, out var viewerId))
             {
-                return Task.FromResult(AuthenticateResult.Fail("Missing or malformed 'ViewerId' header"));
+                return AuthenticateResult.Fail("Missing or malformed 'ViewerId' header");
             }
+
+            var user = await _connector.Mans.FindAsync(x => x.Id == viewerId);
+            if (user == null)
+            {
+                return AuthenticateResult.Fail("User doesn't exist");
+            }
+
 
             var calculatedAuthKey = CreateMd5(_options.ApiId + '_' + viewerId + '_' + _options.ApiSecret).ToUpper();
             if (calculatedAuthKey != authCode.ToString().ToUpper())
             {
-                return Task.FromResult(AuthenticateResult.Fail("Auth doesn't match"));
+                return AuthenticateResult.Fail("Auth doesn't match");
             }
 
             // success! Now we just need to create the auth ticket
             var identity = new ClaimsIdentity("authCode"); // the name of our auth scheme
             // you could add any custom claims here
             var ticket = new AuthenticationTicket(new ClaimsPrincipal(identity), null, "authCode");
-            return Task.FromResult(AuthenticateResult.Success(ticket));
+            return AuthenticateResult.Success(ticket);
         }
 
         private string CreateMd5(string input)

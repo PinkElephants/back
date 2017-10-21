@@ -1,24 +1,51 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
+using Hackinder.DB;
 using Hackinder.Entities;
 using Hackinder.Entities.Dto;
+using MongoDB.Driver;
 
 namespace Hackinder.Services
 {
     public class UserService : IUserService
     {
-        public Task CreateUser(CreateUserDto request)
+        private readonly DbConnector _connector;
+
+        public UserService(DbConnector connector)
         {
-            throw new System.NotImplementedException();
+            _connector = connector;
         }
 
-        public Task UpdateUser(UpdateUserDto request)
+        public void CreateUser(CreateUserDto request)
         {
-            throw new System.NotImplementedException();
+            var user = _connector.Mans.Find(x => x.Id == request.Id).FirstOrDefault();
+            if (user != null)
+                throw new ArgumentException("User exists");
+
+            var createdUser = new Man
+            {
+                Id = request.Id,
+                BirthDate = request.BirthDate
+            };
+            _connector.Mans.InsertOne(createdUser);
         }
 
-        public Task UpdateSettings(int userId, Settings request)
+        public async Task UpdateUser(string userId, UpdateUserDto request)
         {
-            throw new System.NotImplementedException();
+            await _connector.Mans.UpdateOneAsync(x => x.Id == userId,
+                Builders<Man>.Update
+                    .Set(x => x.Idea, request.Idea)
+                    .Set(x => x.Skills, request.Skills)
+                    .Set(x => x.Specializations, request.Specializations)
+            );
+        }
+
+        public async Task UpdateSettings(string userId, Settings request)
+        {
+            await _connector.Mans.UpdateOneAsync(x => x.Id == userId,
+                Builders<Man>.Update
+                    .Set(x => x.Settings, request)
+            );
         }
     }
 }

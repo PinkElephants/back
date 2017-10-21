@@ -32,7 +32,7 @@ namespace Hackinder
                 config.Filters.Add(typeof(ExceptionFilter));
             });
 
-            services.AddScoped(x => new DbConnector(Configuration["connectionString"]));
+            services.AddSingleton(x => new DbConnector(Configuration["connectionString"]));
             services.AddTransient<IUserService, UserService>();
 
             // Register the Swagger generator, defining one or more Swagger documents
