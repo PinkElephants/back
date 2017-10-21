@@ -20,11 +20,12 @@ namespace Hackinder.Services
 
         public List<NewMatchDto> GetMatches(string userId)
         {
-            return MockMatch();
+            //return MockMatch();
             int total = 10;
             var result = new List<NewMatchDto>();
             var man = _connector.Men.Find(x => x.AuthKey == userId).First();
-            var dontMatch = man.Dismatched;
+            var dontMatch = man.Dismatched.ToArray().ToList();
+            dontMatch.Add(man.AuthKey);
 
             if (man.MatchedMe.Count > 0)
             {
@@ -92,11 +93,14 @@ namespace Hackinder.Services
 
             var result = new List<Man>();
 
-            while ((int)Math.Log(skills.Count, 2) != 0 && result.Count < count)
+
+            var closeSkills = orderedSkills.ToArray();
+            while ((int)Math.Log(closeSkills.Length, 2) != 0 && result.Count < count)
             {
-                var close = _connector.Men.Find(x => !dontMatch.Contains(x.AuthKey) && skills.All(s => x.LowerSkills.Contains(s))).ToList();
+                var close = _connector.Men.Find(x => !dontMatch.Contains(x.AuthKey) && closeSkills.All(s => x.LowerSkills.Contains(s))).ToList();
                 result.AddRange(close);
                 dontMatch.AddRange(close.Select(x => x.AuthKey));
+                closeSkills = closeSkills.Take(closeSkills.Length / 2).ToArray();
             }
             if (result.Count < count)
             {
