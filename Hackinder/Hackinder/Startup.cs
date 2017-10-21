@@ -7,6 +7,7 @@ using Hackinder.Application;
 using Hackinder.DB;
 using Hackinder.Services;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,6 +27,18 @@ namespace Hackinder
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //CORS
+            var corsBuilder = new CorsPolicyBuilder();
+            corsBuilder.AllowAnyHeader();
+            corsBuilder.AllowAnyMethod();
+            corsBuilder.AllowAnyOrigin(); // For everyone
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("MyCorsPolicy", corsBuilder.Build());
+            });
+
+
             services.AddAuthentication().AddVkAuthCode();
 
             services.AddMvc(config => {
@@ -46,6 +59,7 @@ namespace Hackinder
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseCors("MyCorsPolicy");
             app.UseAuthentication();
 
             if (env.IsDevelopment())
