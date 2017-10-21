@@ -16,13 +16,17 @@ namespace Hackinder.Services
             _connector = connector;
         }
 
-        public void UpdateSkill(string skill)
+        public void UpdateSkillz(params string[] skillz)
         {
-            skill = skill.Trim().ToLower();
-            if (_connector.Skills.Find(x => x.Name == skill).FirstOrDefault() == null)
-                _connector.Skills.InsertOne(new Skill { Name = skill, Count = 1 });
-            else
-                _connector.Skills.UpdateOne(x => x.Name == skill, Builders<Skill>.Update.Inc(x => x.Count, 1));
+
+            foreach (var skill in skillz)
+            {
+                var trimmed = skill.Trim().ToLower();
+                if (_connector.Skills.Find(x => x.Name == trimmed).FirstOrDefault() == null)
+                    _connector.Skills.InsertOne(new Skill { Name = trimmed, Count = 1 });
+                else
+                    _connector.Skills.UpdateOne(x => x.Name == trimmed, Builders<Skill>.Update.Inc(x => x.Count, 1));
+            }
         }
     }
 }

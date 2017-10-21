@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Hackinder.DB;
 using Hackinder.Entities;
 using Hackinder.Entities.Dto;
@@ -9,10 +10,12 @@ namespace Hackinder.Services
     public class UserService : IUserService
     {
         private readonly DbConnector _connector;
+        private readonly SkillService _skillService;
 
-        public UserService(DbConnector connector)
+        public UserService(DbConnector connector, SkillService skillService)
         {
             _connector = connector;
+            _skillService = skillService;
         }
 
         public Man GetUser(string userId)
@@ -25,10 +28,12 @@ namespace Hackinder.Services
             var user = _connector.Men.Find(x => x.Id == userId).FirstOrDefault();
             if (user != null)
             {
+                _skillService.UpdateSkillz(request.Skills.ToArray());
                 await _connector.Men.UpdateOneAsync(x => x.Id == userId,
                     Builders<Man>.Update
                         .Set(x => x.Idea, request.Idea)
                         .Set(x => x.Skills, request.Skills)
+                        .Set(x => x.LowerSkills, request.Skills.Select(x => x.ToLower().Trim()))
                         .Set(x => x.Summary, request.Summary)
                 );
                 return;

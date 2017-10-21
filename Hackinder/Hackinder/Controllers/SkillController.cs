@@ -29,11 +29,11 @@ namespace Hackinder.Controllers
             return  _connector.Skills.Find(x => true).ToList();
         }
 
-        [Route("skill")]
-        [HttpPost]
-        public void Post(AddSkillDto skill)
-        {
-            _skillService.UpdateSkill(skill.Name);
-        }
+        //[Route("skill")]
+        //[HttpPost]
+        //public void Post(AddSkillDto skill)
+        //{
+        //    _skillService.UpdateSkill(skill.Name);
+        //}
     }
 }
