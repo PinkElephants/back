@@ -4,6 +4,7 @@ using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Hackinder.DB;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
@@ -24,8 +25,8 @@ namespace Hackinder.Application
 
     public class VkAuthCodeAuthenticationOptions : AuthenticationSchemeOptions
     {
-        public string AuthCodeHeaderName => "AuthCode";
-        public string ViewerIdHeaderName => "ViewerId";
+        public const string AuthCodeHeaderName = "AuthCode";
+        public const string ViewerIdHeaderName = "ViewerId";
 
         public string ApiId => "6227851";
         public string ApiSecret => "4fKP3l1muJFszTzHBTMY";
@@ -50,14 +51,15 @@ namespace Hackinder.Application
         }
 
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
-        {
-           
-            if (!Context.Request.Cookies.TryGetValue(_options.AuthCodeHeaderName, out var authCode))
+        {          
+            if (!Context.Request.Headers.TryGetValue(VkAuthCodeAuthenticationOptions.AuthCodeHeaderName, 
+                out var authCode))
             {
                 return AuthenticateResult.Fail("Missing or malformed 'AuthCode' header");
             }
 
-            if (!Context.Request.Cookies.TryGetValue(_options.ViewerIdHeaderName, out var viewerId))
+            if (!Context.Request.Headers.TryGetValue(VkAuthCodeAuthenticationOptions.ViewerIdHeaderName, 
+                out var viewerId))
             {
                 return AuthenticateResult.Fail("Missing or malformed 'ViewerId' header");
             }
@@ -98,6 +100,14 @@ namespace Hackinder.Application
                 }
                 return sb.ToString();
             }
+        }
+    }
+
+    public static class ContextExtension
+    {
+        public static string GetViewerId(this HttpContext context)
+        {
+            return context.Request.Headers[VkAuthCodeAuthenticationOptions.ViewerIdHeaderName];
         }
     }
 }
