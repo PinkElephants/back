@@ -5,8 +5,8 @@ namespace Hackinder.Entities.Dto
 {
     public class CreateUserDto
     {
-        public string Idea { get; set; }
-        public List<string> Skills { get; set; }
-        public string Summary { get; set; }
+        public string idea { get; set; }
+        public List<string> skills { get; set; } = new List<string>();
+        public string summary { get; set; }
     }
 }

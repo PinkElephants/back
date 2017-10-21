@@ -40,16 +40,16 @@ namespace Hackinder.Controllers
             {
                 await _userService.CreateUser(mock.user_id, new CreateUserDto()
                 {
-                    Summary = mock.summary,
-                    Skills = mock.skills,
-                    Idea = mock.idea
+                    summary = mock.summary,
+                    skills = mock.skills,
+                    idea = mock.idea
                 });
             }
             await _userService.CreateUser(667976.ToString(), new CreateUserDto()
             {
-                Summary = ".Net developer",
-                Skills = new List<string> {"sql", ".net", "js"},
-                Idea = "хацкатон"
+                summary = ".Net developer",
+                skills = new List<string> {"sql", ".net", "js"},
+                idea = "хацкатон"
             });
             await _userService.UpdateSettings(667976.ToString(), new Settings()
             {
