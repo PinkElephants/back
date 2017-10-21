@@ -17,15 +17,15 @@ namespace Hackinder.Services
 
         public Man GetUser(string userId)
         {
-            return _connector.Mans.Find(x => x.Id == userId).FirstOrDefault();
+            return _connector.Men.Find(x => x.Id == userId).FirstOrDefault();
         }
 
         public async Task CreateUser(string userId, CreateUserDto request)
         {
-            var user = _connector.Mans.Find(x => x.Id == userId).FirstOrDefault();
+            var user = _connector.Men.Find(x => x.Id == userId).FirstOrDefault();
             if (user != null)
             {
-                await _connector.Mans.UpdateOneAsync(x => x.Id == userId,
+                await _connector.Men.UpdateOneAsync(x => x.Id == userId,
                     Builders<Man>.Update
                         .Set(x => x.Idea, request.Idea)
                         .Set(x => x.Skills, request.Skills)
@@ -39,7 +39,7 @@ namespace Hackinder.Services
                 Id = userId,
                 BirthDate = request.BirthDate
             };
-            await _connector.Mans.InsertOneAsync(createdUser);
+            await _connector.Men.InsertOneAsync(createdUser);
         }
 
 
