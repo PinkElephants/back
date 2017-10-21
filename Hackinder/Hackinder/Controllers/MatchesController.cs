@@ -22,6 +22,7 @@ namespace Hackinder.Controllers
         }
 
         [Route("newmatches")]
+        [HttpPost]
         public List<NewMatchDto> Post(CreateNewmatchesDto dto)
         {
             var result = new List<NewMatchDto>();
@@ -39,6 +40,7 @@ namespace Hackinder.Controllers
         }
 
         [Route("match")]
+        [HttpGet]
         public async void Post(CreateMatchDto dto)
         {
             //var man = await _userManager.GetUserAsync(HttpContext.User);
@@ -47,6 +49,7 @@ namespace Hackinder.Controllers
 
 
         [Route("matches")]
+        [HttpGet]
         public List<MatchDto> Get()
         {
             return null;
