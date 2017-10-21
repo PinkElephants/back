@@ -30,7 +30,7 @@ namespace Hackinder.Controllers
         public List<NewMatchDto> Get()
         {
             return _matchService.GetMatches(HttpContext.GetViewerId());
-            //return _matchService.GetMatches("16172513");
+            //return _matchService.GetMatches("667976");
 
         }
 

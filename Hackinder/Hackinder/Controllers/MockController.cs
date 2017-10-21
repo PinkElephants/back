@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Hackinder.DB;
+using Hackinder.Entities;
 using Hackinder.Entities.Dto;
 using Hackinder.Services;
 using Microsoft.AspNetCore.Http;
@@ -34,7 +35,7 @@ namespace Hackinder.Controllers
             _connector.GetDB().DropCollection(_connector.Men.CollectionNamespace.CollectionName);
             _connector.GetDB().DropCollection(_connector.Skills.CollectionNamespace.CollectionName);
                 var mocks = _matchService.MockMatch();
-
+            
             foreach (var mock in mocks)
             {
                 await _userService.CreateUser(mock.user_id, new CreateUserDto()
@@ -44,6 +45,16 @@ namespace Hackinder.Controllers
                     Idea = mock.idea
                 });
             }
+            await _userService.CreateUser(667976.ToString(), new CreateUserDto()
+            {
+                Summary = ".Net developer",
+                Skills = new List<string> {"sql", ".net", "js"},
+                Idea = "хацкатон"
+            });
+            await _userService.UpdateSettings(667976.ToString(), new Settings()
+            {
+                DesiredSkills = new List<string> {"js", "angular"},
+            });
 
         }
     }

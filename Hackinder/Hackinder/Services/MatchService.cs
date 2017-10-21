@@ -59,24 +59,52 @@ namespace Hackinder.Services
                 16172513,
                 8644959,
                 20142331,
-                41835964,
-                10155845,
-                5134860,
-                103296
+                41835964
+                
             };
             foreach (var id in ids)
             {
                 mock.Add(
                     new NewMatchDto
                     {
-                        skills = new List<string> { ".Net", "JS", "aNgUlAr25", "вова пидор" },
-                        idea = " давайте называть вову пидором",
+                        skills = new List<string> { ".Net", "JS", "aNgUlAr" },
+                        idea = "",
                         isMatch = rnd.Next(0, 1) > 0,
-                        summary = "рукожопый мудак",
+                        summary = "Fullstack",
                         user_id = id.ToString()
                     }
                 );
             }
+            mock.Add(
+                new NewMatchDto
+                {
+                    skills = new List<string> { "XSLT", "JAVA", ".Net", "sql" },
+                    idea = "приложение для музея",
+                    isMatch = rnd.Next(0, 1) > 0,
+                    summary = "Backend developer",
+                    user_id = 10155845.ToString()
+                }
+            );
+            mock.Add(
+                new NewMatchDto
+                {
+                    skills = new List<string> { "XSLT", "JS", "css" },
+                    idea = "приложение для буллинга",
+                    isMatch = rnd.Next(0, 1) > 0,
+                    summary = "Frontend developer",
+                    user_id = 5134860.ToString()
+                }
+            );
+            mock.Add(
+                new NewMatchDto
+                {
+                    skills = new List<string> { "sql", "JS", "React" },
+                    idea = "приложение для хакатона",
+                    isMatch = rnd.Next(0, 1) > 0,
+                    summary = "Frontend-db developer",
+                    user_id = 103296.ToString()
+                }
+            );
             return mock;
         }
 
