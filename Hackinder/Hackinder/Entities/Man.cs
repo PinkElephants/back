@@ -13,8 +13,6 @@ namespace Hackinder.Entities
         public string Idea { get; set; }
         public DateTime BirthDate { get; set; }
 
-        public OAuthToken Token { get; set; }
-
         public List<string> Skills { get; set; }
         public List<string> Specializations { get; set; }
 
