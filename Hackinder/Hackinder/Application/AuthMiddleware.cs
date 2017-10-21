@@ -24,8 +24,8 @@ namespace Hackinder.Application
 
     public class VkAuthCodeAuthenticationOptions : AuthenticationSchemeOptions
     {
-        public const string AuthCodeHeaderName = "AuthCode";
-        public const string ViewerIdHeaderName = "ViewerId";
+        public const string AuthCodeHeaderName = "auth_key";
+        public const string ViewerIdHeaderName = "viewer_id";
 
         public string ApiId => "6227851";
         public string ApiSecret => "4fKP3l1muJFszTzHBTMY";
