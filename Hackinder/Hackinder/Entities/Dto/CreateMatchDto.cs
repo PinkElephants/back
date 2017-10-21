@@ -2,8 +2,8 @@
 {
     public class CreateMatchDto
     {
-        public bool Success { get; set; }
+        public bool isLike { get; set; }
 
-        public string ManId { get; set; }
+        public string user_id { get; set; }
     }
 }

@@ -34,20 +34,20 @@ namespace Hackinder.Controllers
         }
 
         [Route("match")]
-        [HttpGet]
+        [HttpPost]
         public void Post(CreateMatchDto dto)
         {
            
             
-            if (dto.Success)
+            if (dto.isLike)
             {
                 _connector.Men.UpdateOne(x => x.Id == HttpContext.GetViewerId(),
-                    Builders<Man>.Update.AddToSet(x => x.Matched, dto.ManId));
+                    Builders<Man>.Update.AddToSet(x => x.Matched, dto.user_id));
             }
             else
             {
                 _connector.Men.UpdateOne(x => x.Id == HttpContext.GetViewerId(),
-                    Builders<Man>.Update.AddToSet(x => x.Dismatched, dto.ManId));
+                    Builders<Man>.Update.AddToSet(x => x.Dismatched, dto.user_id));
             }
         }
 
