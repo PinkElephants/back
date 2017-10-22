@@ -7,7 +7,7 @@ namespace Hackinder.Services
     public interface IUserService
     {
         Man GetUser(string userId);
-        Task CreateUser(string userId, CreateUserDto request);
+        Task<Man> CreateUser(string userId, CreateUserDto request);
         Task UpdateSettings(string userId, Settings request);
     }
 }

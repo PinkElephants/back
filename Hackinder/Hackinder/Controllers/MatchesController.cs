@@ -38,9 +38,7 @@ namespace Hackinder.Controllers
         [Route("match")]
         [HttpPost]
         public void Post(CreateMatchDto dto)
-        {
-           
-            
+        {                
             if (dto.isLike)
             {
                 _connector.Men.UpdateOne(x => x.UserId == HttpContext.GetViewerId(),

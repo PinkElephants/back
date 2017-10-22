@@ -23,7 +23,7 @@ namespace Hackinder.Services
             return _connector.Men.Find(x => x.UserId == userId).FirstOrDefault();
         }
 
-        public async Task CreateUser(string userId, CreateUserDto request)
+        public async Task<Man> CreateUser(string userId, CreateUserDto request)
         {
             var user = _connector.Men.Find(x => x.UserId == userId).FirstOrDefault();
             if (user == null)
@@ -43,6 +43,8 @@ namespace Hackinder.Services
                     .Set(x => x.LowerSkills, request.Skills.Select(x => x.ToLower().Trim()))
                     .Set(x => x.Summary, request.Summary)
             );
+
+            return user;
         }
 
 
