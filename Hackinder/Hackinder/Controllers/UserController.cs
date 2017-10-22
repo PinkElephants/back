@@ -31,9 +31,10 @@ namespace Hackinder.Controllers
         }
 
         [HttpPost]
-        public async Task Create([FromBody]CreateUserDto request)
+        public async Task<object> Create([FromBody]CreateUserDto request)
         {
             await _userService.CreateUser(HttpContext.GetViewerId(), request);
+            return new object();
         }
 
 
