@@ -35,13 +35,13 @@ namespace Hackinder.Services
                 await _connector.Men.InsertOneAsync(createdUser); ;
             }
 
-            _skillService.UpdateSkillz(request.Skills.ToArray());
+            _skillService.UpdateSkillz(request.skills.ToArray());
             await _connector.Men.UpdateOneAsync(x => x.UserId == userId,
                 Builders<Man>.Update
-                    .Set(x => x.Idea, request.Idea)
-                    .Set(x => x.Skills, request.Skills)
-                    .Set(x => x.LowerSkills, request.Skills.Select(x => x.ToLower().Trim()))
-                    .Set(x => x.Summary, request.Summary)
+                    .Set(x => x.Idea, request.idea)
+                    .Set(x => x.Skills, request.skills)
+                    .Set(x => x.LowerSkills, request.skills.Select(x => x.ToLower().Trim()))
+                    .Set(x => x.Summary, request.summary)
             );
 
             return user;

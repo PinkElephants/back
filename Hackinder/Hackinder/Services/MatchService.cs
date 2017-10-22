@@ -124,14 +124,14 @@ namespace Hackinder.Services
 
 
             var closeSkills = orderedSkills.ToArray();
-            while ((int)Math.Log(closeSkills.Length, 2) != 0 && result.Count < count)
+            while ((int)Math.Log(closeSkills.Length, 2) > 0 && result.Count < count)
             {
                 var close = _connector.Men.Find(x => !dontMatch.Contains(x.UserId) && closeSkills.All(s => x.LowerSkills.Contains(s))).ToList();
                 result.AddRange(close);
                 dontMatch.AddRange(close.Select(x => x.UserId));
                 closeSkills = closeSkills.Take(closeSkills.Length / 2).ToArray();
             }
-            if (result.Count < count)
+            if (orderedSkills.Count != 0 && result.Count < count)
             {
                 var rnd = new Random();
                 var skill = orderedSkills[rnd.Next(0, orderedSkills.Count)];
